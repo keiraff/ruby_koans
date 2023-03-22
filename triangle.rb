@@ -14,9 +14,20 @@
 #   about_triangle_project_2.rb
 #
 def triangle(a, b, c)
-  # WRITE THIS CODE
+  triangle_check(a,b,c)
+    if a == b || a == c || b == c
+      (a == b and b == c) ? :equilateral : :isosceles
+    else
+      :scalene
+    end
 end
 
 # Error class used in part 2.  No need to change this code.
 class TriangleError < StandardError
+end
+
+private
+def triangle_check(a,b,c)
+  raise TriangleError, 'negative or zero numbers' if a <= 0 || b <= 0 || c <= 0
+  raise TriangleError, 'not possible to create triangle' if a >= b + c || b >= a + c || c >= a + b
 end
