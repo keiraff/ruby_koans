@@ -13,12 +13,58 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 # of the Proxy class is given in the AboutProxyObjectProject koan.
 
 class Proxy
+  attr_accessor :messages
+
   def initialize(target_object)
     @object = target_object
-    # ADD MORE CODE HERE
+    @messages = Array.new
   end
 
-  # WRITE CODE HERE
+  def channel
+    record_message(__method__)
+    @object.channel
+  end
+
+  def channel=(x)
+    @object.channel = x
+    record_message(__method__)
+  end
+
+  def on?
+    record_message(__method__)
+    @object.on?
+  end
+
+  def power
+    record_message(__method__)
+    @object.power
+  end
+
+  def called?(method)
+    @messages.include?(method)
+  end
+
+  def number_of_times_called(method)
+    hash = Hash.new(0)
+    @messages.each { |name| hash[name] += 1 }
+    hash[method]
+  end
+
+  def upcase!
+    record_message(__method__)
+    @object = @object.upcase
+  end
+
+  def split
+    record_message(__method__)
+    @object.split(" ")
+  end
+
+  private
+
+  def record_message(name)
+    @messages << name
+  end
 end
 
 # The proxy object should pass the following Koan:
@@ -67,7 +113,7 @@ class AboutProxyObjectProject < Neo::Koan
     tv.power
 
     assert tv.called?(:power)
-    assert ! tv.called?(:channel)
+    assert !tv.called?(:channel)
   end
 
   def test_proxy_counts_method_calls
@@ -92,7 +138,6 @@ class AboutProxyObjectProject < Neo::Koan
     assert_equal [:upcase!, :split], proxy.messages
   end
 end
-
 
 # ====================================================================
 # The following code is to support the testing of the Proxy class.  No
@@ -130,7 +175,7 @@ class TelevisionTest < Neo::Koan
     tv.power
     tv.power
 
-    assert ! tv.on?
+    assert !tv.on?
   end
 
   def test_edge_case_on_off
@@ -144,7 +189,7 @@ class TelevisionTest < Neo::Koan
 
     tv.power
 
-    assert ! tv.on?
+    assert !tv.on?
   end
 
   def test_can_set_the_channel
